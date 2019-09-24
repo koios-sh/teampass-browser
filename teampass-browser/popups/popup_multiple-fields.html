@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title data-i18n="popupTitle"></title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="../options/bootstrap.min.css" />
+    <script src="../browser-polyfill.js"></script>
+    <script src="../global.js"></script>
+    <script src="../jquery-3.3.1.min.js"></script>
+    <script src="../options/bootstrap.min.js"></script>
+    <script src="popup_functions.js"></script>
+    <script defer src="../translate.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="settings" class="settings">
+        <button id="btn-options" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-cog"></span> <span data-i18n="popupSettingsText"/></button>
+        <button id="btn-choose-credential-fields" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-list-alt"></span> <span data-i18n="popupChooseCredentialsText"/></button>
+        <button id="lock-database-button" class="btn btn-danger" title="Lock database"><span class="glyphicon glyphicon-lock"></span></button>
+
+        <div id="update-available" class="alert alert-danger">
+          <span data-i18n="popupUpdateAvailable"></span>
+          <br />
+          <a target="_blank" class="alert-link" href="https://teampass.net/download"><span data-i18n="popupDownloadNewVersion"></span></a>.
+        </div>
+      </div>
+
+      <div>
+        <p>
+          <span data-i18n="popupMultiplePasswordFields"></span>
+          "<code><span data-i18n="contextMenuFillUsernameAndPassword"></span></code>", "<code><span data-i18n="contextMenuFillPassword"></span></code>"
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

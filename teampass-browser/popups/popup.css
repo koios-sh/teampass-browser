@@ -1,0 +1,94 @@
+body {
+    font-family: sans-serif;
+    overflow-x: hidden;
+    background-color: #eee;
+    font-size: 15px;
+    padding: 8px;
+    min-width: 440px;
+    max-width: 460px;
+    width: auto;
+}
+.container {
+    min-width: 440px;
+    max-width: 460px;
+    width: auto;
+}
+.list-group {
+    font-size: .9em !important;
+}
+.list-group-item {
+    padding: 5px 10px !important;
+}
+.list-group-item:hover {
+    cursor: pointer;
+}
+.settings {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    font-size: 90%;
+    text-align: left;
+}
+.settings label {
+    display: block;
+}
+.settings label input {
+    vertical-align: middle;
+}
+.settings .description {
+    margin-top: 3px;
+    font-size: 80%;
+    color: #787878;
+}
+#list {
+    padding-left: 0px;
+}
+#child {
+    border-top: 0px;
+}
+.small {
+    margin-top: 3px;
+    margin-left: 12px;
+    font-size: 80%;
+    color: #787878;
+    width: 60%;
+}
+#update-available {
+    padding-top: 10px;
+    margin-top: 10px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    text-align: left;
+    display: none;
+}
+#update-available a:hover,
+#update-available a:active {
+    text-decoration: underline;
+}
+#lock-database-button {
+    float: right;
+    height: 30px;
+}
+#login-filter {
+	outline:none;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	margin-bottom: 5px;
+	padding: 2px 10px;
+	width: 100%;
+}
+.credentials .groups {
+    display: none;
+    border-top: 1px solid #333;
+}
+.connected-database {
+    display: none;
+    font-size: 85%;
+    color: #787878;
+}
+.credentials .username-new {
+    display: none;
+}
+.credentials .username-exists {
+    display: none;
+}

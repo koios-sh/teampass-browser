@@ -1,0 +1,362 @@
+1.4.0 (21-04-2019)
+=========================
+ - Add translations from Transifex
+ - Show HiDPI toolbar icon in Chrome [#471]
+ - Remove jQuery as a dependency [#128, #430]
+ - Fix ignored sites in Firefox [#458]
+ - Add "Show more" button for selecting arbitrary custom fields [#360]
+
+1.3.3 (26-03-2019)
+=========================
+ - Prevent page scripts from using added DOM elements [#438]
+ - Clear credentials when screen is locked [#358]
+ - Fix z-order of password generator icon [#447]
+ - Allow to select group when adding new credentials [#369]
+ - Improve error messages [#392]
+ - Fix shortcuts [#414]
+
+1.3.2 (11-01-2019)
+=========================
+ - Fix TeamPass version check [#376]
+ - Fix race condition when web page has multiple frames [#371]
+ - Remove check for aria-hidden [#365]
+ - Reduce CPU usage [#349]
+
+1.3.1 (11-01-2019)
+=========================
+ - Fix database unlocking [#309]
+ - Add new key icon [#333]
+ - Add keyboard shortcut configuration page for Firefox [#326]
+ - Fix reconnect bug with older TeamPass version [#354]
+ - Improve input field detection [#314]
+ - Remove unnecessary white space from translation files [#325]
+ - URL change detection [#340]
+ - HTTP auth credential requests are now handled separately (requires TeamPass 2.4.0) [#343]
+ - Site preferences fixes [#338]
+
+1.3.0 (07-10-2018)
+=========================
+ - Add support for translations [#37]
+ - Add quick-filter bar to credentials selection popup [#252]
+ - Disable automatic filling and submission of HTTP basic-auth fields by default [#260]
+ - Do not fill password fields if a manually entered username does not match retrieved credentials [#289]
+ - Fix handling of websites with separate pages for username and password [#291]
+ - Improve detection and handling of hidden input fields [#263, #293]
+ - Fix updating credentials from the context menu [#256]
+ - Improve shortcuts and add button to open shortcut settings [#304]
+ - Do not mix pairing IDs across multiple databases within a session [#258]
+ - Ignore certain elements on a page, such as SVGs [#246]
+ - Do not show the full pairing key on the settings page [#242]
+ - Default to checking for updates every 3 days [#239]
+ - Hide update message when updates are turned off [#285]
+ - Fix discard button not being shown when selection custom login fields [#307]
+ - Update webextension polyfill to a newer version, which fixes various errors [#296]
+
+1.2.0 (29-07-2018)
+=========================
+- Replace "Ignored Sites" with new "Site Preferences" settings page [#208]
+- Fix checks throwing errors [#207, #222]
+- Ignore more non-input elements [#212, 210]
+- Fix URL matching when there is a trailing slash [#231]
+- Allow infiting waiting on "Remember Credentials" popup [#232]
+- Minor user interface adjustments [#233, #230, #213]
+- Improve search field detection [#195]
+
+1.1.7 (13-06-2018)
+=========================
+- Fix credential field detection regression [#199]
+
+1.1.6 (12-06-2018)
+=========================
+- Disable single username field detection [#194]
+- Fix ignored sites [#196]
+- Detect credential fields without type [#198]
+
+1.1.5 (11-06-2018)
+=========================
+- Fix search fields being detected as username fields [#189]
+
+1.1.4 (10-06-2018)
+=========================
+- Improve performance of field detection and limit it to 100 fields [#166,#157,185]
+- Improve option to ignore fields [#170]
+- Automatically retrieve credentials after unlocking the database [#153]
+- Fix option to only save the domain name not working as intended [#151]
+- Fix credentials popup not being shown on some websites [#154]
+- Improve detection of username fields [#164]
+- Allow filling of TOTP fields when they are on a separate page [#162]
+- Ignore invisible input fields more strictly [#176]
+
+1.1.3 (11-05-2018)
+=========================
+- Remove autoreconnect to prevent proxy process leakage on Windows [#147]
+- Fix browser becoming unresponsive due to constant field polling [#148]
+
+1.1.2 (10-05-2018)
+=========================
+- Fix credentials being requested for non-login fields [#144]
+
+1.1.1 (10-05-2018)
+=========================
+- Improve dynamic input field detection [#117]
+- Fix HTTP Basic Auth dialog [#121]
+- Fix incorrect update notification [#141]
+- Do not try to detect database changes on page load [#142]
+
+1.1.0 (09-05-2018)
+=========================
+- Allow specifying ignored sites
+- Add new notification options
+- Improve detection of username fields
+- Change conflicting shortcuts
+- Redetect credential fields after reload
+- Don't show popup when database is closed
+- Various password generator fixes
+- Fix various resource leaks
+- Fix searching in all databases
+
+1.0.1 (04-03-2018)
+=========================
+- Don't fill password fields if they already have data
+- Fix custom placeholders
+- Fix input type checks
+- Fix custom input fields with multiple tabs
+
+1.0.0 (27-02-2018)
+=========================
+- First stable release
+
+0.5.2 (02-02-2018)
+=========================
+- Choose own credential fields saves the full URL instead of host
+- HTTP Auth no longer gets stuck when there are no credentials available
+- Added option to show notifications (enabled by default)
+- Added notifications for HTTP Auth and saving new credentialsList (new permission needed)
+
+0.5.1 (23-01-2018)
+=========================
+- Fixed unnecessary credential retrieving when input fields are not available
+
+0.5.0 (22-01-2018)
+=========================
+- Fixed an error when filling only a password
+- Credential retrieval is allowed when only one input field is visible (TOTP)
+- Asynchronous receiveCredentialsIfNecessary()
+- Send triggerUnlock with request that need to popup TeamPass to front
+- Added verifyDatabaseResponse to get_databasehash
+- Renamed teampass-browser to TeamPass-Browser
+- Removed duplicate retrieve_credentials requests
+- Fixed identation
+- Added support for credential filling through user interaction when database is closed
+
+0.4.8 (06-01-2018)
+=========================
+- Changed native messaging host name to org.teampass.teampass_browser
+- Exclude XSD files from content scripts
+- Switched default keyboard shortcuts to Alt+Shift+U and Alt+Shift+P
+
+0.4.5 (28-12-2017)
+=========================
+- Added support for aria-hidden attribute when checking input field visibility
+- Fixed a bug in redetecting credentials
+- Small CSS fixes
+
+0.4.4 (17-12-2017)
+=========================
+- Added support for OTP codes via context menu
+- Fixed HTTP auth
+- General content script code cleaning
+
+0.4.3 (9-12-2017)
+=========================
+- Create password generator dialog only when clicking the icon
+- Some adjustments to jQuery CSS scope
+
+0.4.2 (27-11-2017)
+=========================
+- Fixed HTTP authentication with multiple credentials (credits to smorks)
+- Fixed error handling when decrypt fails
+- Fixed database-locked response handling
+- Fixed nonce increment when encrypting messages
+
+0.4.1 (18-11-2017)
+=========================
+- Added support for the credentials dropdown menu with only password field visible
+- Fixed jQuery overriding with custom scoped CSS
+- Fixed non-necessary destroying of autocomplete on autofill
+
+0.4.0 (13-11-2017)
+=========================
+- Fixed showing context menu on password fields with Firefox
+- Ignore XML files on content scripts (Firefox shows them incorrectly)
+- UDP features removed as TeamPass switched them to Unix domain sockets and named pipes
+
+0.3.9 (04-11-2017)
+=========================
+- Removed incorrect timeout waiting on init
+
+0.3.8 (01-11-2017)
+=========================
+- Use browser.storage.local instead of localStorage
+- Switched some functions to promise
+
+0.3.7 (22-10-2017)
+=========================
+- Improved credentials check (does not use protocol requests for polling)
+
+0.3.6 (20-10-2017)
+=========================
+- Restricted page credentials polling to active tab
+
+0.3.5 (19-10-2017)
+=========================
+- Removed database locked/unlocked status polling and replaced it with message handling from TeamPass signals
+- Clear or change page credentials if a database is changed or locked
+
+0.3.4 (14-10-2017)
+=========================
+- Added support for Lock Database button
+- Fixed some error message handling
+
+0.3.3 (12-10-2017)
+=========================
+- Fixed database reloading when TeamPass has restarted and database is opened
+- New buttons with glyphicons
+
+0.3.2 (30-09-2017)
+=========================
+- Improved timeout handling
+
+0.3.1 (29-09-2017)
+=========================
+- Added timeout handling for postMessage(). Allows proxy application to be reloaded.
+
+0.3.0 (18-09-2017)
+=========================
+- Added Mozilla's browser-polyfill for making WebExtension compatibility easier
+- Merged changes from the latest passifox (credits to smorks/keepasshttp-connector)
+- HTTP auth works with all browsers (credits to smorks/keepasshttp-connector)
+- Fixed showing credentials from previous logins in the popup (credits to smorks/keepasshttp-connector)
+- Automatic detection of div's with forms that are non-hidden by user interaction
+- Verified the source code via JSHint
+
+0.2.9 (27-08-2017)
+=========================
+- Code cleaning, global functions moved to global.js
+- New popup state and button when database is closed or locked
+- Fixed HTTP auth login with Chrome/Chromium/Vivaldi
+
+0.2.8 (08-08-2017)
+=========================
+- Changed Firefox's minimum version to 55.0
+
+0.2.7 (31-07-2017)
+=========================
+- Some Firefox related changes (credits to projectgus)
+- Fixed Skip button function when choosing own credential fields
+- Adjusted some callbacks
+- Fixed showing an error message on the same tab when TeamPass is instantly closed
+- Added null checking for onDisconnected()
+- Any Chrome related stuff is now disabled on options pages when using Firefox
+
+0.2.6 (23-07-2017)
+=========================
+- Fixed error message variables
+
+0.2.5 (21-07-2017)
+=========================
+- Fixed incorrect return value in keepass.getCryptoKey
+- Added a better error message handling
+- Added an error message when Native Messaging is disabled in TeamPass
+
+0.2.4 (11-07-2017)
+=========================
+- Changed comparison operators to strict ones (and some code cleaning)
+- Copy and Fill & copy buttons are now hidden when Password Generator has an error
+- Fix to a bug when reconnecting to TeamPass (sometimes public keys are changed too quickly)
+- Fix for password generator (error is now shown immediately instead of a blank dialog)
+- Use a single password generator icon
+
+0.2.3 (05-07-2017)
+=========================
+- Fixed a few variables
+
+0.2.2 (04-07-2017)
+=========================
+- Some code cleaning and rewriting
+- Fixed displaying 'Database not opened' error message
+- Changed icon color to gray when database is not opened or connected
+- Added support for UDP port selector for proxy applications
+- Fixed strict_min_version for Firefox Nightly
+
+0.2.1 (27-06-2017)
+=========================
+- get-databasehash request/response is now encrypted
+
+0.2.0 (26-06-2017)
+=========================
+- Added JSON install files and script for Windows
+- New version checking function
+- Added error message handling
+- Added support for reloading TeamPass (or proxy) with new public keys
+
+0.1.10 (14-06-2017)
+=========================
+- Updated manifest and json files up to date
+
+0.1.9 (14-06-2017)
+=========================
+- Renamed the project to teampass-browser
+
+0.1.8 (13-06-2017)
+=========================
+- Fixed showing wrong status messages
+- Enable relaunching and reconnecting to TeamPass (create new keys on the fly)
+
+0.1.7 (28-05-2017)
+=========================
+- Removed debug logging messages
+- Removed unnecessary permissions from manifest
+
+0.1.6 (27-05-2017)
+=========================
+- Upgraded tweetnacl-js to 1.0.0
+- Upgraded tweetnacl-utils-js to 0.15.0
+- Some code fixes concerning encryption and decryption
+- Redesigned simpler password generator dialog
+
+0.1.5 (22-05-2017)
+=========================
+- Fixed a few deprecated functions
+- Added some more Firefox compatible code (Firefox now works 90%!)
+- Removed an unncecessary .map file
+
+0.1.4 (21-05-2017)
+=========================
+- Upgraded manifest options to V2
+- Added some more Firefox compatible code
+
+0.1.3 (19-05-2017)
+=========================
+- Fixed a bug showing correct status in the popup
+- Added a license for a quick method to determine which browser is used in API calls
+
+0.1.2 (18-05-2017)
+=========================
+- Upgraded jquery from 3.2.0 to 3.2.1
+- Removed unnecessary images
+- Upgraded deprecated API calls (extension -> runtime, so from synchronous to asynchronous)
+- Partial Firefox support (the extension can be loaded but functionality is still limited)
+
+0.1.1 (28-04-2017)
+=========================
+- This version works with the TeamPass fork
+- Upgraded JavaScripts to work asynchronously
+
+0.1.0 (12-04-2017)
+=========================
+- Replaced crypto libraries with tweetnacl-js
+- New application and popup icons
+- Upgraded bootstrap to version 3.3.7
+- Upgraded jquery from 1.11 to 3.2.0
+- Upgraded jquery-ui from 1.10.2 to 1.12.1
