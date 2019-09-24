@@ -7,8 +7,8 @@ Based on [keepassxreboot](https://github.com/keepassxreboot/)'s [KeePassXC-Brows
 
 This browser extension was first supported in Teampass 2.1.27 (release end of 2018), in general it is advised to only use the latest available release.
 
-1. replace <YourTeamPassServerRoot>/api/functions.php
-           <YourTeamPassServerRoot>/api/index.php
+1. replace `<YourTeamPassServerRoot>/api/functions.php`
+           `<YourTeamPassServerRoot>/api/index.php`
    with included one which only support user's apiKey.
 2. Install extension
 3. Fill Server Information
