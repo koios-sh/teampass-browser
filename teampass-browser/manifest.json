@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "TeamPass-Browser",
-    "version": "1.4.7",
-    "version_name": "1.4.7",
+    "version": "0.1.1",
+    "version_name": "0.1.1",
     "description": "__MSG_extensionDescription__",
     "author": "KOIOS DevOps Team",
     "icons": {
