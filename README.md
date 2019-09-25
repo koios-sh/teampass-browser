@@ -9,7 +9,7 @@ This browser extension was first supported in Teampass 2.1.27 (release end of 20
 
 1. replace `<YourTeamPassServerRoot>/api/functions.php`
            `<YourTeamPassServerRoot>/api/index.php`
-   with included one which only support user's apiKey.
+   with included one in teampsss-api which only support user's apiKey.
 2. Install extension
 3. Fill Server Information
 
