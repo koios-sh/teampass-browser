@@ -2,7 +2,8 @@
 
 var tpPassword = {};
 tpPassword.created = false;
-tpPassword.icon = null;
+// tpPassword.icon = null;
+tpPassword.icons = {};
 tpPassword.inputField = null;
 tpPassword.selected = null;
 tpPassword.startPosX = 0;
@@ -23,16 +24,21 @@ tpPassword.titleBar = null;
 try {
     tpPassword.observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
+            const targetId = entry.target.getAttribute('data-tp-id');
+            if (!(targetId in tpPassword.icons)) {
+                continue;
+            }
+            const icon = tpPassword.icons[targetId];
             const rect = DOMRectToArray(entry.boundingClientRect);
 
             if ((entry.intersectionRatio === 0 && !entry.isIntersecting) || (rect.some(x => x < -10))) {
-                tpPassword.icon.style.display = 'none';
+                icon.style.display = 'none';
             } else if (entry.intersectionRatio > 0 && entry.isIntersecting) {
-                tpPassword.icon.style.display = 'block';
+                icon.style.display = 'block';
 
                 // Wait for possible DOM animations
                 setTimeout(() => {
-                    tpPassword.setIconPosition(tpPassword.icon, entry.target);
+                    tpPassword.setIconPosition(entry.target);
                 }, 500);
             }
         }
@@ -84,6 +90,7 @@ tpPassword.initField = function(field, inputs, pos) {
 };
 
 tpPassword.createIcon = function(field) {
+    const targetId = field.getAttribute('data-tp-id');
     const className = (isFirefox() ? 'key-moz' : 'key');
     const size = (field.offsetHeight > 28) ? 24 : 16;
     let offset = Math.floor((field.offsetHeight - size) / 3);
@@ -95,7 +102,7 @@ tpPassword.createIcon = function(field) {
             'alt': tr('passwordGeneratorIcon'),
             'size': size,
             'offset': offset,
-            'tp-pwgen-field-id': field.getAttribute('data-tp-id')
+            'tp-pwgen-field-id': targetId
         });
     icon.style.zIndex = '99999';
     icon.style.width = String(size) + 'px';
@@ -103,15 +110,21 @@ tpPassword.createIcon = function(field) {
 
     icon.addEventListener('click', function(e) {
         e.preventDefault();
-        tpPassword.showDialog(field, icon);
+        tpPassword.showDialog(field);
     });
 
-    tpPassword.setIconPosition(icon, field);
-    tpPassword.icon = icon;
+    tpPassword.icons[targetId] = icon;
+    tpPassword.setIconPosition(field);
+
     document.body.appendChild(icon);
 };
 
-tpPassword.setIconPosition = function(icon, field) {
+tpPassword.setIconPosition = function(field) {
+    const targetId = field.getAttribute('data-tp-id');
+    if (!(targetId in tpPassword.icons)) {
+        return;
+    }
+    const icon = tpPassword.icons[targetId];
     const rect = field.getBoundingClientRect();
     const offset = Number(icon.getAttribute('offset'));
     const size = Number(icon.getAttribute('size'));
@@ -205,10 +218,15 @@ tpPassword.openDialog = function() {
 };
 
 tpPassword.trigger = function() {
-    tpPassword.showDialog(tpPassword.inputField, tpPassword.icon);
+    tpPassword.showDialog(tpPassword.inputField);
 };
 
-tpPassword.showDialog = function(field, icon) {
+tpPassword.showDialog = function(field) {
+    const targetId = field.getAttribute('data-tp-id');
+    if (!(targetId in tpPassword.icons)) {
+        return;
+    }
+    const icon = tpPassword.icons[targetId];
     if (!tpFields.isVisible(field)) {
         document.body.removeChild(icon);
         field.removeAttribute('tp-password-generator');
@@ -376,15 +394,15 @@ tpPassword.disableButtons = function() {
 
 // Handle icon position on window resize
 window.addEventListener('resize', function(e) {
-    if (tpPassword.inputField && tpPassword.icon) {
-        tpPassword.setIconPosition(tpPassword.icon, tpPassword.inputField);
+    if (tpPassword.inputField && tpPassword.icons) {
+        tpPassword.setIconPosition(tpPassword.inputField);
     }
 });
 
 // Handle icon position on scroll
 window.addEventListener('scroll', function(e) {
-    if (tpPassword.inputField && tpPassword.icon) {
-        tpPassword.setIconPosition(tpPassword.icon, tpPassword.inputField);
+    if (tpPassword.inputField && tpPassword.icons) {
+        tpPassword.setIconPosition(tpPassword.inputField);
     }
 });
 

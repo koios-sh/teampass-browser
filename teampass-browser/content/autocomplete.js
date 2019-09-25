@@ -5,6 +5,7 @@ tpAutocomplete.autoSubmit = false;
 tpAutocomplete.elements = [];
 tpAutocomplete.started = false;
 tpAutocomplete.index = -1;
+tpAutocomplete.icons = {};
 tpAutocomplete.input = undefined;
 tpAutocomplete.filter = undefined;
 
@@ -12,16 +13,21 @@ tpAutocomplete.filter = undefined;
 try {
     tpAutocomplete.observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
+            const targetId = entry.target.getAttribute('data-tp-id');
+            if (!(targetId in tpAutocomplete.icons)) {
+                continue;
+            }
+            const icon = tpAutocomplete.icons[targetId];
             const rect = DOMRectToArray(entry.boundingClientRect);
 
             if ((entry.intersectionRatio === 0 && !entry.isIntersecting) || (rect.some(x => x < -10))) {
-                tpAutocomplete.icon.style.display = 'none';
+                icon.style.display = 'none';
             } else if (entry.intersectionRatio > 0 && entry.isIntersecting) {
-                tpAutocomplete.icon.style.display = 'block';
+                icon.style.display = 'block';
 
                 // Wait for possible DOM animations
                 setTimeout(() => {
-                    tpAutocomplete.setIconPosition(tpAutocomplete.icon, entry.target);
+                    tpAutocomplete.setIconPosition(entry.target);
                 }, 500);
             }
         }
@@ -68,6 +74,7 @@ tpAutocomplete.create = function(input, showListInstantly = false, autoSubmit = 
 };
 
 tpAutocomplete.createIcon = function (field) {
+    const targetId = field.getAttribute('data-tp-id');
     const className = (isFirefox() ? 'key-moz' : 'key');
     const size = (field.offsetHeight > 28) ? 24 : 16;
     let offset = Math.floor((field.offsetHeight - size) / 3);
@@ -77,7 +84,8 @@ tpAutocomplete.createIcon = function (field) {
         {
             'title': tr('contextMenuFillUsernameAndPassword'),
             'size': size,
-            'offset': offset
+            'offset': offset,
+            'tp-uname-field-id': targetId
         });
     icon.style.zIndex = '99999';
     icon.style.width = String(size) + 'px';
@@ -92,12 +100,17 @@ tpAutocomplete.createIcon = function (field) {
         tpAutocomplete.showList(field);
     });
 
-    tpAutocomplete.setIconPosition(icon, field);
-    tpAutocomplete.icon = icon;
+    tpAutocomplete.icons[targetId] = icon;
+    tpAutocomplete.setIconPosition(field);
     document.body.appendChild(icon);
 };
 
-tpAutocomplete.setIconPosition = function (icon, field) {
+tpAutocomplete.setIconPosition = function (field) {
+    const targetId = field.getAttribute('data-tp-id');
+    if (!(targetId in tpAutocomplete.icons)) {
+        return;
+    }
+    const icon = tpAutocomplete.icons[targetId];
     const rect = field.getBoundingClientRect();
     const offset = Number(icon.getAttribute('offset'));
     const size = Number(icon.getAttribute('size'));
@@ -108,15 +121,15 @@ tpAutocomplete.setIconPosition = function (icon, field) {
 
 // Handle icon position on window resize
 window.addEventListener('resize', function (e) {
-    if (tpAutocomplete.input && tpAutocomplete.icon) {
-        tpAutocomplete.setIconPosition(tpAutocomplete.icon, tpAutocomplete.input);
+    if (tpAutocomplete.input && tpAutocomplete.icons) {
+        tpAutocomplete.setIconPosition(tpAutocomplete.input);
     }
 });
 
 // Handle icon position on scroll
 window.addEventListener('scroll', function (e) {
-    if (tpAutocomplete.input && tpAutocomplete.icon) {
-        tpAutocomplete.setIconPosition(tpAutocomplete.icon, tpAutocomplete.input);
+    if (tpAutocomplete.input && tpAutocomplete.icons) {
+        tpAutocomplete.setIconPosition(tpAutocomplete.input);
     }
 });
 
@@ -228,6 +241,7 @@ tpAutocomplete.removeItem = function(items) {
 };
 
 tpAutocomplete.closeList = function(elem) {
+    
     const items = document.getElementsByClassName('tpAutocomplete-items');
     for (const item of items) {
         if (elem !== item && tpAutocomplete.input) {
@@ -235,7 +249,12 @@ tpAutocomplete.closeList = function(elem) {
         }
     }
     if (!tpFields.isVisible(tpAutocomplete.input)) {
-        document.body.removeChild(tpAutocomplete.icon);
+        const targetId = tpAutocomplete.input.getAttribute('data-tp-id');
+        if (!(targetId in tpAutocomplete.icons)) {
+            return;
+        }
+        const icon = tpAutocomplete.icons[targetId];
+        document.body.removeChild(icon);
         tpAutocomplete.input.removeAttribute('tp-password-generator');
     }
 };
@@ -329,7 +348,7 @@ document.addEventListener('click', function(e) {
 
     if (!((e.target === tpAutocomplete.input && e.target.nodeName === tpAutocomplete.input.nodeName) || 
         (e.target === tpAutocomplete.filter && e.target.nodeName === tpAutocomplete.filter.nodeName) ||
-        (e.target === tpAutocomplete.icon && e.target.nodeName === tpAutocomplete.icon.nodeName))) {
+        e.target.classList.contains('tp-fill-icon'))) {
         tpAutocomplete.closeList(e.target);
     }
 });

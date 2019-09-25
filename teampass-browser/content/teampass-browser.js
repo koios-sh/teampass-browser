@@ -729,10 +729,16 @@ const observer = new MutationObserver(function(mutations, obs) {
                 } else {
                     tpObserverHelper.handleObserverRemove(mut.target);
                 }
+            } else if (newValue === "" && mut.attributeName === 'style') {
+                tpObserverHelper.handleObserverAdd(mut.target);
             }
         } else if (mut.type === 'childList') {
-            tpObserverHelper.handleObserverAdd((mut.addedNodes.length > 0) ? mut.addedNodes[0] : mut.target);
-            tpObserverHelper.handleObserverRemove((mut.removedNodes.length > 0) ? mut.removedNodes[0] : mut.target);
+            const addedTarget = (mut.addedNodes.length > 0) ? mut.addedNodes[0] : mut.target;
+            const removedTarget = (mut.removedNodes.length > 0) ? mut.removedNodes[0] : mut.target;
+            if (!addedTarget.style || addedTarget.style.display !== 'none') {
+                tpObserverHelper.handleObserverAdd(addedTarget);
+            }
+            tpObserverHelper.handleObserverRemove(removedTarget);
         }
     }
 });
@@ -878,6 +884,8 @@ tp.initCredentialFields = function(forceCall) {
             });
         } else if (_singleInputEnabledForPage) {
             tp.preparePageForMultipleCredentials(tp.credentials);
+        } else {
+            tp.prepareUserNameFieldIcon();
         }
     });
 };
@@ -927,37 +935,37 @@ tp.retrieveCredentialsCallback = function(credentials, dontAutoFillIn) {
 
 tp.prepareFieldsForCredentials = function(autoFillInForSingle) {
     // Only one login for this site
-    if (autoFillInForSingle && tp.settings.autoFillSingleEntry && tp.credentials.length === 1) {
-        let combination = null;
-        if (!tp.p && !tp.u && tpFields.combinations.length > 0) {
-            tp.u = _f(tpFields.combinations[0].username);
-            tp.p = _f(tpFields.combinations[0].password);
-            combination = tpFields.combinations[0];
-        }
-        if (tp.u) {
-            tp.setValueWithChange(tp.u, tp.credentials[0].login);
-            combination = tpFields.getCombination('username', tp.u);
-        }
-        if (tp.p) {
-            tp.setValueWithChange(tp.p, tp.credentials[0].password);
-            combination = tpFields.getCombination('password', tp.p);
-        }
+    // if (autoFillInForSingle && tp.settings.autoFillSingleEntry && tp.credentials.length === 1) {
+    //     let combination = null;
+    //     if (!tp.p && !tp.u && tpFields.combinations.length > 0) {
+    //         tp.u = _f(tpFields.combinations[0].username);
+    //         tp.p = _f(tpFields.combinations[0].password);
+    //         combination = tpFields.combinations[0];
+    //     }
+    //     if (tp.u) {
+    //         tp.setValueWithChange(tp.u, tp.credentials[0].login);
+    //         combination = tpFields.getCombination('username', tp.u);
+    //     }
+    //     if (tp.p) {
+    //         tp.setValueWithChange(tp.p, tp.credentials[0].password);
+    //         combination = tpFields.getCombination('password', tp.p);
+    //     }
 
-        if (combination) {
-            let list = [];
-            if (tp.fillInStringFields(combination.fields, tp.credentials[0].stringFields, list)) {
-                tpForm.destroy(false, { 'password': list.list[0], 'username': list.list[1] });
-            }
-        }
+    //     if (combination) {
+    //         let list = [];
+    //         if (tp.fillInStringFields(combination.fields, tp.credentials[0].stringFields, list)) {
+    //             tpForm.destroy(false, { 'password': list.list[0], 'username': list.list[1] });
+    //         }
+    //     }
 
-        // Generate popup-list of usernames + descriptions
-        browser.runtime.sendMessage({
-            action: 'popup_login',
-            args: [ [ `${tp.credentials[0].login} (${tp.credentials[0].name})` ] ]
-        });
-    } else {// if (tp.credentials.length > 1 || (tp.credentials.length > 0 && (!tp.settings.autoFillSingleEntry || !autoFillInForSingle))) {
+    //     // Generate popup-list of usernames + descriptions
+    //     browser.runtime.sendMessage({
+    //         action: 'popup_login',
+    //         args: [ [ `${tp.credentials[0].login} (${tp.credentials[0].name})` ] ]
+    //     });
+    // } else {// if (tp.credentials.length > 1 || (tp.credentials.length > 0 && (!tp.settings.autoFillSingleEntry || !autoFillInForSingle))) {
         tp.preparePageForMultipleCredentials(tp.credentials);
-    }
+    // }
 };
 
 tp.preparePageForMultipleCredentials = function(credentials) {
@@ -989,6 +997,11 @@ tp.preparePageForMultipleCredentials = function(credentials) {
 
     // Initialize autocomplete for username fields
     // if (tp.settings.autoCompleteUsernames) {
+    tp.prepareUserNameFieldIcon();
+    // }
+};
+
+tp.prepareUserNameFieldIcon = function() {
     for (const i of tpFields.combinations) {
         // Both username and password fields are visible
         if (_detectedFields >= 2) {
@@ -1004,7 +1017,6 @@ tp.preparePageForMultipleCredentials = function(credentials) {
             }
         }
     }
-    // }
 };
 
 tp.getFormActionUrl = function(combination) {
