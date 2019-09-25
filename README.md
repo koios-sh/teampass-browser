@@ -1,5 +1,5 @@
 # TeamPass-Browser
-Browser extension for [TeamPass](https://teampass.net/) with Http Rest API.
+Browser (Chrome/Firefox) extension for [TeamPass](https://teampass.net/) with Http Rest API.
 
 Based on [keepassxreboot](https://github.com/keepassxreboot/)'s [KeePassXC-Browser](https://github.com/keepassxreboot/keepassxc-browser).
 
