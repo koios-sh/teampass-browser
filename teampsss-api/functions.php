@@ -274,7 +274,7 @@ function getGivenUserFolderIds($api_user) {
 	"pwd": "password",
 	"desc": "description",
 	"folder_id": "5",
-	"login": "18918029397",
+	"login": "aaaaaaaaa",
 	"email": "xxxxx@email.com",
 	"url": "http://www.baidu.com",
 	"tags": "",
