@@ -86,10 +86,12 @@ teampass.sendRestHttpRequest = async function(action, payload) {
         }
         const path = action;
         const method = action in tpActionsMethod ? tpActionsMethod[action] : 'GET';
-        let url = serverConfig.apiUrl + path + "?apikey=" + encodeURIComponent(serverConfig.apiKey) + "&saltkey=" + encodeURIComponent(serverConfig.saltKey);
+        let url = serverConfig.apiUrl + path + "?apikey=" + encodeURIComponent(serverConfig.apiKey);
+        if (serverConfig.saltKey && serverConfig.saltKey.length > 0) {
+            url = url + "&saltkey=" + encodeURIComponent(serverConfig.saltKey);
+        }
+        
         const xhr = new XMLHttpRequest();
-        let version = -1;
-
         xhr.onload = function (e) {
             try{
                 const json = JSON.parse(xhr.responseText);

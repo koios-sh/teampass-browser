@@ -274,7 +274,7 @@ function getGivenUserFolderIds($api_user) {
 	"pwd": "password",
 	"desc": "description",
 	"folder_id": "5",
-	"login": "aaaaaaaaa",
+	"login": "18918029397",
 	"email": "xxxxx@email.com",
 	"url": "http://www.baidu.com",
 	"tags": "",
@@ -659,7 +659,7 @@ function restGet()
         if ($GLOBALS['request'][0] == "read") {
             if ($GLOBALS['request'][1] == 'whoami') {
                 $payload = $api_user;
-                if (isset($_GET['saltkey'])) {
+                if (isset($_GET['saltkey']) && !empty($_GET['saltkey']) && !empty($api_user['encrypted_psk'])) {
                     $user_saltkey = defuse_validate_personal_key(
                         $_GET['saltkey'],
                         $api_user['encrypted_psk']
@@ -726,7 +726,7 @@ function restGet()
                     $json[$data['id']]['email'] = mb_convert_encoding($data['email'], mb_detect_encoding($data['email']), 'UTF-8');
                     $json[$data['id']]['url'] = mb_convert_encoding($data['url'], mb_detect_encoding($data['url']), 'UTF-8');
                     if ($path == $api_user['id']) {
-                        if (!empty($_GET['saltkey'])) {
+                        if (!empty($_GET['saltkey']) && !empty($_GET['saltkey']) && !empty($api_user['encrypted_psk'])) {
                             $user_saltkey = defuse_validate_personal_key(
                                 $_GET['saltkey'],
                                 $api_user['encrypted_psk']
@@ -842,7 +842,7 @@ function restGet()
                     $json[$inc]['email'] = mb_convert_encoding($data['email'], mb_detect_encoding($data['email']), 'UTF-8');
                     $json[$inc]['url'] = mb_convert_encoding($data['url'], mb_detect_encoding($data['url']), 'UTF-8');
                     if ($path == $api_user['id']) {
-                        if (!empty($_GET['saltkey'])) {
+                        if (!empty($_GET['saltkey']) && !empty($_GET['saltkey']) && !empty($api_user['encrypted_psk'])) {
                             $user_saltkey = defuse_validate_personal_key(
                                 $_GET['saltkey'],
                                 $api_user['encrypted_psk']

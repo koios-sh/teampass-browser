@@ -272,10 +272,10 @@ options.initServerSettings = function() {
                 if (!statusResponse.success) {
                     alert(statusResponse.message);
                 } else {
-                    if (!statusResponse.data['saltkey']) {
+                    if (statusResponse.data.hasOwnProperty('saltkey') && !statusResponse.data['saltkey']) {
                         options.createWarning(teampassSaltKey, '个人秘钥无效');
                     } else {
-                        alert('验证成功');
+                        alert('验证成功' + (statusResponse.data.hasOwnProperty('saltkey') ? '(个人秘钥有效)' : '(未开启个人文件夹)'));
                     }
                 }
             });

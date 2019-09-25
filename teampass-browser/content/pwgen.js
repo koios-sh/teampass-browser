@@ -394,8 +394,8 @@ document.addEventListener('click', function(e) {
         const dialogEndX = tpPassword.dialog.offsetLeft + tpPassword.dialog.offsetWidth;
         const dialogEndY = tpPassword.dialog.offsetTop + tpPassword.dialog.offsetHeight;
 
-        if ((e.clientX < tpPassword.dialog.offsetLeft || e.clientX > dialogEndX) ||
-            (e.clientY < tpPassword.dialog.offsetTop || e.clientY > dialogEndY) &&
+        if (((e.clientX < tpPassword.dialog.offsetLeft || e.clientX > dialogEndX ||
+            e.clientY < tpPassword.dialog.offsetTop || e.clientY > dialogEndY)) &&
             !e.target.classList.contains('tp-pwgen-icon')) {
             tpPassword.openDialog();
         }
