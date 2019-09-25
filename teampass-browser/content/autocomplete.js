@@ -79,7 +79,7 @@ tpAutocomplete.createIcon = function (field) {
             'size': size,
             'offset': offset
         });
-    icon.style.zIndex = '9999';
+    icon.style.zIndex = '99999';
     icon.style.width = String(size) + 'px';
     icon.style.height = String(size) + 'px';
 
