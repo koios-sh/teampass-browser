@@ -141,7 +141,11 @@ teampass.queryMyFolders = async function (callback, tab) {
         for (let i = 0; i < response.data.length; i++) {
             const g = response.data[i];
             if (g.level !== '1') {
-                groupMap[g.parent_id].children.push(g);
+                if (g.parent_id in groupMap) {
+                    groupMap[g.parent_id].children.push(g);
+                } else {
+                    groups.push(g);
+                }
             }
         }
         callback(groups);
