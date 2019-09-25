@@ -145,58 +145,6 @@ function restHead()
 }
 
 /**
- * Add new entry to cache table
- *
- * @param  integer $item_id
- * @return void
- */
-function addToCacheTable($item_id)
-{
-    teampassConnect();
-    // get data
-    $data = DB::queryfirstrow(
-        "SELECT i.label AS label, i.description AS description, i.id_tree AS id_tree, i.perso AS perso, i.restricted_to AS restricted_to, i.login AS login, i.id AS id
-        FROM ".prefix_table("items")." AS i
-        AND ".prefix_table("log_items")." AS l ON (l.id_item = i.id)
-        WHERE i.id = %i
-        AND l.action = %s",
-        intval($item_id),
-        'at_creation'
-    );
-
-    // Get all TAGS
-    $tags = "";
-    $data_tags = DB::query("SELECT tag FROM ".prefix_table("tags")." WHERE item_id=%i", $item_id);
-    foreach ($data_tags as $itemTag) {
-        if (!empty($itemTag['tag'])) {
-            $tags .= $itemTag['tag']." ";
-        }
-    }
-
-    // finaly update
-    DB::insert(
-        prefix_table("cache"),
-        array(
-            "id" => $data['id'],
-            "label" => $data['label'],
-            "description" => $data['description'],
-            "tags" => $tags,
-            "id_tree" => $data['id_tree'],
-            "perso" => $data['perso'],
-            "restricted_to" => $data['restricted_to'],
-            "login" => $data['login'],
-            "folder" => "",
-            //"restricted_to" => "0",
-            "author" => API_USER_ID,
-            "renewal_period" => 0,
-            "timestamp" => time(),
-            "url" => 0
-        )
-    );
-}
-
-
-/**
  * Get the setting value
  *
  * @param  string] $setting
@@ -448,7 +396,7 @@ function insertOrUpdateItem($itemJson, $api_user) {
                     array(
                         "id_item" => $item_id,
                         "date" => time(),
-                        "id_user" => API_USER_ID,
+                        "id_user" => $api_user['id'],
                         "action" => "at_creation",
                         "raison" => $api_user['name']
                     )
@@ -466,7 +414,7 @@ function insertOrUpdateItem($itemJson, $api_user) {
                         "restricted_to" => "",
                         "login" => $item_login,
                         "folder" => "",
-                        "author" => API_USER_ID,
+                        "author" => $api_user['id'],
                         "renewal_period" => "0",
                         "timestamp" => time(),
                         "url" => "0"
@@ -502,7 +450,7 @@ function insertOrUpdateItem($itemJson, $api_user) {
                     array(
                         "id_item" => $item_id,
                         "date" => time(),
-                        "id_user" => API_USER_ID,
+                        "id_user" => $api_user['id'],
                         "action" => "at_modification"
                     )
                 );
