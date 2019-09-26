@@ -92,3 +92,137 @@ body {
 .credentials .username-exists {
     display: none;
 }
+
+.tp-pwgen-buttons {
+    position: relative;
+}   
+    
+.tp-pwgen-titlebar {
+    font-size: 14px !important;
+    background-color: #0677e1;
+    color: #fff;
+    padding: .4em .2em .4em .8em;
+    margin: .2em 0 .2em 0;
+    position: relative;
+    cursor: move;
+}
+
+.tp-pwgen-password-row {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.tp-pwgen-bits {
+    text-align: right;
+}
+
+.tp-pwgen-input {
+    width: 90%;
+    font-size: 12px !important;
+    font-weight: normal !important;
+}
+
+input[type=range].slider {
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 0px 0;
+}
+
+input[type=range].slider:focus {
+    outline: none;
+}
+
+input[type=range].slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 32px;
+    cursor: pointer;
+    box-shadow: 0.1px 0.1px 0px #005900, 0px 0px 0.1px #007200;
+    background: #0000ff;
+    border-radius: 0px;
+    border: 0px solid #010101;
+}
+
+input[type=range].slider::-webkit-slider-thumb {
+    box-shadow: 0px 0px 0px rgba(0, 0, 62, 0.67), 0px 0px 0px rgba(0, 0, 88, 0.67);
+    border: 0.4px solid rgba(0, 30, 0, 0.57);
+    height: 32px;
+    width: 17px;
+    border-radius: 0px;
+    background: #aeffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: 0px;
+}
+
+input[type=range].slider:focus::-webkit-slider-runnable-track {
+    background: #8080ff;
+}
+
+input[type=range].slider::-moz-range-track {
+    width: 100%;
+    height: 32px;
+    cursor: pointer;
+    box-shadow: 0.1px 0.1px 0px #005900, 0px 0px 0.1px #007200;
+    background: #0000ff;
+    border-radius: 0px;
+    border: 0px solid #010101;
+}
+
+input[type=range].slider::-moz-range-thumb {
+    box-shadow: 0px 0px 0px rgba(0, 0, 62, 0.67), 0px 0px 0px rgba(0, 0, 88, 0.67);
+    border: 0.4px solid rgba(0, 30, 0, 0.57);
+    height: 32px;
+    width: 17px;
+    border-radius: 0px;
+    background: #aeffff;
+    cursor: pointer;
+}
+
+input[type=range].slider::-ms-track {
+    width: 100%;
+    height: 32px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type=range].slider::-ms-fill-lower {
+    background: #000080;
+    border: 0px solid #010101;
+    border-radius: 0px;
+    box-shadow: 0.1px 0.1px 0px #005900, 0px 0px 0.1px #007200;
+}
+
+input[type=range].slider::-ms-fill-upper {
+    background: #0000ff;
+    border: 0px solid #010101;
+    border-radius: 0px;
+    box-shadow: 0.1px 0.1px 0px #005900, 0px 0px 0.1px #007200;
+}
+
+input[type=range].slider::-ms-thumb {
+    box-shadow: 0px 0px 0px rgba(0, 0, 62, 0.67), 0px 0px 0px rgba(0, 0, 88, 0.67);
+    border: 0.4px solid rgba(0, 30, 0, 0.57);
+    width: 17px;
+    border-radius: 0px;
+    background: #aeffff;
+    cursor: pointer;
+    height: 32px;
+}
+
+input[type=range].slider:focus::-ms-fill-lower {
+    background: #0000ff;
+}
+
+input[type=range].slider:focus::-ms-fill-upper {
+    background: #8080ff;
+}
+
+.tp-pwgen-length {
+    width: 50% !important;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}

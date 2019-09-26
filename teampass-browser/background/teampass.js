@@ -73,7 +73,7 @@ teampass.reloadSettings = function () {
 teampass.isConfigured = async function () {
     return new Promise((resolve, reject) => {
         browser.storage.local.get({ 'whoami': {} }).then((item) => {
-            resolve(item.whoami);
+            resolve(item['whoami'] && item['whoami']['success'] === true);
         });
     });
 }
@@ -116,10 +116,18 @@ teampass.sendRestHttpRequest = async function(action, payload) {
 };
 
 teampass.queryMyInfo = async function(callback, tab) {
-    teampass.sendRestHttpRequest(tpActions.WHO_AM_I, null).then(response => {
-        browser.storage.local.set({ 'whoami': response });
-        callback(response);
-    });
+    teampass.isConfigured().then((configured) => {
+        if (configured) {
+            browser.storage.local.get({ 'whoami': {} }).then((item) => {
+                callback(item['whoami']);
+            });
+        } else {
+            teampass.sendRestHttpRequest(tpActions.WHO_AM_I, null).then(response => {
+                browser.storage.local.set({ 'whoami': response });
+                callback(response);
+            });
+        }
+    })
 };
 
 teampass.queryMyPasswords = async function(callback, tab) {

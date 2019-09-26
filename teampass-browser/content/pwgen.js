@@ -38,7 +38,7 @@ try {
 
                 // Wait for possible DOM animations
                 setTimeout(() => {
-                    tpPassword.setIconPosition(entry.target);
+                    tpPassword.setIconPosition(icon);
                 }, 500);
             }
         }
@@ -114,17 +114,17 @@ tpPassword.createIcon = function(field) {
     });
 
     tpPassword.icons[targetId] = icon;
-    tpPassword.setIconPosition(field);
+    tpPassword.setIconPosition(icon);
 
     document.body.appendChild(icon);
 };
 
-tpPassword.setIconPosition = function(field) {
-    const targetId = field.getAttribute('data-tp-id');
+tpPassword.setIconPosition = function(icon) {
+    const targetId = icon && icon.getAttribute('tp-pwgen-field-id') || "";
     if (!(targetId in tpPassword.icons)) {
         return;
     }
-    const icon = tpPassword.icons[targetId];
+    const field = _f(targetId);
     const rect = field.getBoundingClientRect();
     const offset = Number(icon.getAttribute('offset'));
     const size = Number(icon.getAttribute('size'));
@@ -298,13 +298,15 @@ tpPassword.fill = function(e) {
             }
         }
 
-        field.value = password.value;
+        tp.setValue(field, password.value);
+        // field.value = password.value;
         if ($('.tp-pwgen-checkbox').checked) {
             if (field.getAttribute('tp-pwgen-next-field-id')) {
                 const nextFieldId = field.getAttribute('tp-pwgen-next-field-id');
                 const nextField = $('input[data-tp-id=\'' + nextFieldId + '\']');
                 if (nextField) {
-                    nextField.value = password.value;
+                    tp.setValue(nextField, password.value);
+                    // nextField.value = password.value;
                 }
             }
         }
@@ -394,15 +396,15 @@ tpPassword.disableButtons = function() {
 
 // Handle icon position on window resize
 window.addEventListener('resize', function(e) {
-    if (tpPassword.inputField && tpPassword.icons) {
-        tpPassword.setIconPosition(tpPassword.inputField);
+    for (var targetId in tpPassword.icons) {
+        tpPassword.setIconPosition(tpPassword.icons[targetId]);
     }
 });
 
 // Handle icon position on scroll
 window.addEventListener('scroll', function(e) {
-    if (tpPassword.inputField && tpPassword.icons) {
-        tpPassword.setIconPosition(tpPassword.inputField);
+    for (var targetId in tpPassword.icons) {
+        tpPassword.setIconPosition(tpPassword.icons[targetId]);
     }
 });
 

@@ -894,9 +894,16 @@ tp.initPasswordGenerator = function(inputs) {
     if (tp.settings.usePasswordGenerator) {
         tpPassword.init();
 
-        for (let i = 0; i < inputs.length; i++) {
+        let count = 0;
+        for (let i = inputs.length - 1; i >= 0; i--) {
             if (inputs[i] && inputs[i].getAttribute('type') && inputs[i].getAttribute('type').toLowerCase() === 'password') {
+                if (count >= 2) {
+                    // modify password? so many password fields
+                    return;
+                }
                 tpPassword.initField(inputs[i], inputs, i);
+                count ++;
+
             }
         }
     }
@@ -990,10 +997,10 @@ tp.preparePageForMultipleCredentials = function(credentials) {
     }
 
     // Generate popup-list of usernames + descriptions
-    browser.runtime.sendMessage({
-        action: 'popup_login',
-        args: [ usernames ]
-    });
+    // browser.runtime.sendMessage({
+    //     action: 'popup_login',
+    //     args: [ usernames ]
+    // });
 
     // Initialize autocomplete for username fields
     // if (tp.settings.autoCompleteUsernames) {
@@ -1002,9 +1009,15 @@ tp.preparePageForMultipleCredentials = function(credentials) {
 };
 
 tp.prepareUserNameFieldIcon = function() {
+    const _oldDetectedFields = _detectedFields;
     for (const i of tpFields.combinations) {
         // Both username and password fields are visible
-        if (_detectedFields >= 2) {
+        if (_detectedFields >= 4) {
+            if (_f(i.username) && _f(i.password)) {
+                tpAutocomplete.create(_f(i.password), false, tp.settings.autoSubmit);
+            } 
+            _detectedFields = 3;
+        } else if (_detectedFields >= 2) {
             if (_f(i.username)) {
                 tpAutocomplete.create(_f(i.username), false, tp.settings.autoSubmit);
             }
@@ -1017,6 +1030,7 @@ tp.prepareUserNameFieldIcon = function() {
             }
         }
     }
+    _detectedFields = _oldDetectedFields;
 };
 
 tp.getFormActionUrl = function(combination) {

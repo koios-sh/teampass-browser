@@ -76,14 +76,14 @@ browserAction.showDefault = function(callback, tab) {
         iconType: 'normal',
         popup: 'popup.html'
     };
-    teampass.isConfigured().then((response) => {
-        if (!response || !response.success) {
+    teampass.isConfigured().then((configured) => {
+        if (!configured) {
             stackData.iconType = 'cross';
         }
 
         if (page.tabs[tab.id].loginList.length > 0) {
-            stackData.iconType = 'questionmark';
-            stackData.popup = 'popup_login.html';
+            // stackData.iconType = 'questionmark';
+            // stackData.popup = 'popup_login.html';
         }
 
         browserAction.stackUnshift(stackData, tab.id);

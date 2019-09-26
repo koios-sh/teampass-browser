@@ -27,7 +27,7 @@ try {
 
                 // Wait for possible DOM animations
                 setTimeout(() => {
-                    tpAutocomplete.setIconPosition(entry.target);
+                    tpAutocomplete.setIconPosition(icon);
                 }, 500);
             }
         }
@@ -101,16 +101,16 @@ tpAutocomplete.createIcon = function (field) {
     });
 
     tpAutocomplete.icons[targetId] = icon;
-    tpAutocomplete.setIconPosition(field);
+    tpAutocomplete.setIconPosition(icon);
     document.body.appendChild(icon);
 };
 
-tpAutocomplete.setIconPosition = function (field) {
-    const targetId = field.getAttribute('data-tp-id');
+tpAutocomplete.setIconPosition = function (icon) {
+    const targetId = icon && icon.getAttribute('tp-uname-field-id') || "";
     if (!(targetId in tpAutocomplete.icons)) {
         return;
     }
-    const icon = tpAutocomplete.icons[targetId];
+    const field = _f(targetId);
     const rect = field.getBoundingClientRect();
     const offset = Number(icon.getAttribute('offset'));
     const size = Number(icon.getAttribute('size'));
@@ -121,15 +121,15 @@ tpAutocomplete.setIconPosition = function (field) {
 
 // Handle icon position on window resize
 window.addEventListener('resize', function (e) {
-    if (tpAutocomplete.input && tpAutocomplete.icons) {
-        tpAutocomplete.setIconPosition(tpAutocomplete.input);
+    for (var targetId in tpAutocomplete.icons) {
+        tpAutocomplete.setIconPosition(tpAutocomplete.icons[targetId]);
     }
 });
 
 // Handle icon position on scroll
 window.addEventListener('scroll', function (e) {
-    if (tpAutocomplete.input && tpAutocomplete.icons) {
-        tpAutocomplete.setIconPosition(tpAutocomplete.input);
+    for (var targetId in tpAutocomplete.icons) {
+        tpAutocomplete.setIconPosition(tpAutocomplete.icons[targetId]);
     }
 });
 
@@ -330,7 +330,7 @@ tpAutocomplete.fillPassword = function(value, index) {
     const combination = tpFields.getCombination(givenType, fieldId);
     combination.loginId = index;
 
-    tp.fillIn(combination, false, false);
+    tp.fillIn(combination, givenType === 'password', false);
     // tp.fillInCredentials(combination, givenType === 'password', false);
     tpAutocomplete.input.setAttribute('fetched', true);
 };

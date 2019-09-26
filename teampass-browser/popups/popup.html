@@ -18,6 +18,7 @@
       <div id="settings" class="settings">
         <button id="btn-options" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-cog"></span> <span data-i18n="popupSettingsText"/></button>
         <button id="btn-choose-credential-fields" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-list-alt"></span> <span data-i18n="popupChooseCredentialsText"/></button>
+        <button id="reload-status-button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-refresh"></span> <span data-i18n="popupReloadButton" /></button>
         <!-- <button id="lock-database-button" class="btn btn-danger" title="Lock database"><span class="glyphicon glyphicon-lock"></span></button> -->
 
         <!-- <div id="update-available" class="alert alert-danger">
@@ -31,45 +32,14 @@
         <p><img style="margin-right: 1em" src="throbber.gif"/> <span data-i18n="popupCheckingStatus"/></p>
       </div>
 
-      <!-- <div id="not-configured" style="display: none">
-        <p data-i18n="popupNotConfigured"></p>
-        <div style="text-align: right">
-          <button id="connect-button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-link"></span> <span data-i18n="popupConnectButton"/></button>
-        </div>
-      </div> -->
-
-      <!-- <div id="need-reconfigure" style="display: none">
-        <p data-i18n="popupNeedReconfigure"></p>
-        <p style="margin-left: 1em">
-          <code id="need-reconfigure-message"></code>
-        </p>
-        <p data-i18n="popupNeedReconfigureMessage"></p>
-        <div style="text-align: right">
-          <button id="reconnect-button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-refresh"></span> <span data-i18n="popupReconnectButton"/></button>
-        </div>
-      </div> -->
-
-      <!-- <div id="configured-not-associated" style="display: none">
-        <span data-i18n="popupConfiguredNotAssociated" i18n-placeholder="<span class='bg-warning' id='unassociated-identifier'></span>"></span>
-      </div> -->
-
       <div id="user-info" style="display: none">
-        <h3>用户信息</h3>
         <p>
             <span>姓名</span>: <span
-                id="user-info-name"></span><br />
-            <span>角色</span>: <span id="user-info-role"></span><br />
-            <span>个人秘钥</span>: <span id="user-info-saltkey"></span><br />
-            <span>个人文件夹</span>: <span
-                id="user-info-personal-folder">error</span>
+                id="user-info-name" style="color: blue"></span>(<span id="user-info-role" style="color: blue"></span>)<br />
+            <span>个人文件夹</span>: <span id="user-info-personal-folder"></span>(秘钥<span id="user-info-saltkey"></span>)
         </p>
-        <!-- <p data-i18n="popupConfiguredAndAssociated" i18n-placeholder="<span class='bg-success' id='associated-identifier'></span>"></p> -->
       </div>
-      <div style="text-align: right">
-          <button id="reload-status-button" class="btn btn-sm btn-primary"><span
-                  class="glyphicon glyphicon-refresh"></span> <span data-i18n="popupReloadButton" /></button>
-      </div>
-
+      
       <div id="error-encountered" style="display: none">
         <p data-i18n="popupErrorEncountered"></p>
         <p style="margin-left: 1em">
@@ -77,15 +47,20 @@
         </p>
         
       </div>
-      <!-- <div id="database-not-opened" style="display: none">
-        <p data-i18n="popupErrorEncountered"></p>
-        <p style="margin-left: 1em">
-          <code id="database-error-message"></code>
-        </p>
-        <div style="text-align: right">
-          <button id="reopen-database-button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-lock"></span> <span data-i18n="popupReopenButton"/></button>
+
+      <div class="tp tp-pwgen-dialog" tp-pwgen-field-id="TANGRAM__PSP_10__password" style="top: 199px; left: 1015px; display: block;">
+        <div class="tp-pwgen-titlebar">密码生成器</div>
+        <div class="tp-pwgen-password-row">
+            <input class="tp-pwgen-input" placeholder="" type="text" tabindex="-1">
+            <label class="tp-pwgen-bits">20</label>位
         </div>
-      </div> -->
+        <div class="tp-pwgen-buttons">
+            <button class="btn btn-sm btn-primary" id="tp-pwgen-btn-generate">生成</button>
+            <button class="btn btn-sm btn-success" id="tp-pwgen-btn-copy">复制</button>    
+            <input type="range" class="tp-pwgen-length" id="tp-pwgen-length" min="8" max="40" step="1" value="20"/>
+        </div>
+    </div>
+
     </div>
   </body>
 </html>

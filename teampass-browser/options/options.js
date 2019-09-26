@@ -261,7 +261,7 @@ options.initServerSettings = function() {
         options['settings']['teampassApiKey'] = teampassApiKey.value;
 
         value = teampassSaltKey.value;
-        if (value.length > 0 && value.length <= 40) {
+        if (value.length >= 0 && value.length <= 40) {
             options['settings']['teampassSaltKey'] = value;
         }
 
@@ -272,12 +272,14 @@ options.initServerSettings = function() {
                 if (!statusResponse.success) {
                     alert(statusResponse.message);
                 } else {
+                    browser.storage.local.set({ 'whoami': statusResponse });
                     if (statusResponse.data.hasOwnProperty('saltkey') && !statusResponse.data['saltkey']) {
                         options.createWarning(teampassSaltKey, '个人秘钥无效');
                     } else {
                         alert('验证成功' + (statusResponse.data.hasOwnProperty('saltkey') ? '(个人秘钥有效)' : '(未开启个人文件夹)'));
                     }
                 }
+                options.saveSettings();
             });
         });        
     });
