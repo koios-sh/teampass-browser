@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
     "name": "TeamPass-Browser",
-    "version": "0.1.2",
-    "version_name": "0.1.2",
+    "version": "0.1.3",
+    "version_name": "0.1.3",
     "description": "__MSG_extensionDescription__",
-    "author": "KOIOS DevOps Team",
+    "author": "yoyokko@gmail.com",
     "icons": {
         "16": "icons/teampass_16x16.png",
         "48": "icons/teampass_48x48.png",
@@ -73,36 +73,6 @@
             "all_frames": true
         }
     ],
-    "commands": {
-        "fill_username_password": {
-            "description": "__MSG_contextMenuFillUsernameAndPassword__",
-            "suggested_key": {
-                "default": "Alt+Shift+U",
-                "mac": "MacCtrl+Shift+U"
-            }
-        },
-        "fill_password": {
-            "description": "__MSG_contextMenuFillPassword__",
-            "suggested_key": {
-                "default": "Alt+Shift+I",
-                "mac": "MacCtrl+Shift+I"
-            }
-        },
-        "fill_totp": {
-            "description": "__MSG_contextMenuFillTOTP__",
-            "suggested_key": {
-                "default": "Alt+Shift+T",
-                "mac": "MacCtrl+Shift+T"
-            }
-        },
-        "show_password_generator": {
-            "description": "__MSG_contextMenuShowPasswordGenerator__",
-            "suggested_key": {
-                "default": "Alt+Shift+G",
-                "mac": "MacCtrl+Shift+G"
-            }
-        }
-    },
     "web_accessible_resources": [
         "icons/key.svg",
         "icons/teampass.svg",
@@ -117,7 +87,9 @@
         "storage",
         "tabs",
         "webRequest",
-        "webRequestBlocking"
+        "webRequestBlocking",
+        "https://*/*",
+        "http://*/*"
     ],
-   "default_locale": "en"
+   "default_locale": "zh_CN"
 }

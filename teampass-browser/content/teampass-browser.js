@@ -1195,10 +1195,13 @@ tp.getSubmitButton = function(form) {
     let elements = [form, document];
     const formBottom = form.getBoundingClientRect().bottom;
     let submitButton = undefined;
-    elements.forEach(element => {
+    elements.every(element => {
         // Try to find another button in form. Select the first one.
         let buttons = Array.from(element.querySelectorAll('button[type=\'button\'], a[onclick], input[type=\'button\'], button:not([type])'));
         let visibleButtons = buttons.filter((item) => { 
+            if (form === element) {
+                return tpFields.isVisible(item);
+            }
             return tpFields.isVisible(item) && item.getBoundingClientRect().top >= formBottom;
         });
         if (visibleButtons.length === 1) {
@@ -1212,6 +1215,7 @@ tp.getSubmitButton = function(form) {
                 submitButton = visibleButtons[0];
             }
         }
+        return submitButton === undefined;
     });
 
     return submitButton;
