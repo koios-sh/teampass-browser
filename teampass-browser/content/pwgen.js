@@ -125,6 +125,9 @@ tpPassword.setIconPosition = function(icon) {
         return;
     }
     const field = _f(targetId);
+    if (!field) {
+        return;
+    }
     const rect = field.getBoundingClientRect();
     const offset = Number(icon.getAttribute('offset'));
     const size = Number(icon.getAttribute('size'));

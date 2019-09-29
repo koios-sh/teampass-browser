@@ -177,7 +177,7 @@ teampass.generatePassword = async function(callback, tab, length) {
 teampass.addPassword = function (callback, tab, label, description, login, email, password, folder_id, url, tags) {
     let payload = {
         label: label ? label : "",
-        description: description ? description : "",
+        desc: description ? description : "",
         login: login ? login : "",
         email: email ? email : "",
         pwd: password,
@@ -195,7 +195,7 @@ teampass.updatePassword = function (callback, tab, id, label, description, login
     let payload = {
         id: id,
         label: label ? label : "",
-        description: description ? description : "",
+        desc: description ? description : "",
         login: login ? login : "",
         email: email ? email : "",
         pwd: password,

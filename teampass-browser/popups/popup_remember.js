@@ -8,7 +8,7 @@ function _initialize(tab) {
     _tab = tab;
 
     // No credentials set or credentials already cleared
-    if (!_tab.credentials.username && !_tab.credentials.password) {
+    if (!_tab.credentials || (!_tab.credentials.username && !_tab.credentials.password)) {
         _close();
         return;
     }
@@ -26,21 +26,27 @@ function _initialize(tab) {
     let url = _tab.credentials.url;
     url = (url.length > 50) ? url.substring(0, 50) + '...' : url;
     $('.information-url:first').text(url);
-    $('.information-username:first').text(_tab.credentials.username);
+    $('#information-username')[0].value = _tab.credentials.username;
 
-    if (!_tab.credentials.usernameExists) {
-        $('#popupRememberInfoText').text('发现新用户名和密码，是否保存？');
-        $('#information-label')[0].value = _tab.credentials.title;
+    const exist_credential = _tab.credentials.existingCredential;
+    if (exist_credential) {
+        $('#information-label')[0].value = exist_credential.label;
+        $('#information-email')[0].value = exist_credential.email ? exist_credential.email : "";
+        $('#information-desc')[0].value = exist_credential.description ? exist_credential.description : "";
+    } else {
+        $('#information-label')[0].placeholder = '填写账号密码名称';
+        $('#information-desc')[0].value = _tab.credentials.title;
         if (validateEmail(_tab.credentials.username)) {
             $('#information-email')[0].value = _tab.credentials.username;
-        }   
-    } else {
-        const credential = _tab.credentials.existingCredential;
-        $('#information-label')[0].value = credential.label;
-        $('#information-email')[0].value = credential.email;
-    }
+        }
+    }    
 
-    $('#information-label')[0].select();
+    const createOkBt = function () {
+        return $('<button>')
+            .attr('class', 'btn btn-sm btn-success')
+            .attr('style', 'position: absolute; right: 0; margin-top: -5px')
+            .text(tr('defineConfirm'));
+    };
 
     $('#btn-new').click(function(e) {
         e.preventDefault();
@@ -76,6 +82,8 @@ function _initialize(tab) {
                 }
             };
 
+            let bt = null;
+
             const createLink = function (folder_name, folder_id, hasChildren) {
                 const a = $('<a>')
                     .attr('href', '#')
@@ -83,17 +91,29 @@ function _initialize(tab) {
                     .text(folder_name)
                     .click(function(ev) {
                         ev.preventDefault();
-                        const label = document.getElementById('information-label').value;
-                        const email = document.getElementById('information-email').value;
-                        browser.runtime.sendMessage({
-                            action: 'add_credentials',
-                            args: [label, '', _tab.credentials.username, email, _tab.credentials.password, folder_id, _tab.credentials.url, '']
-                        }).then(_verifyResult);
+                        if (bt) {
+                            bt[0].parentNode.removeChild(bt[0]);
+                        }
+                        bt = createOkBt();
+                        bt.click(function (ev) {
+                            ev.preventDefault();
+                            
+                            const username = document.getElementById('information-username').value;
+                            const label = document.getElementById('information-label').value;
+                            const desc = document.getElementById('information-desc').value;
+                            const email = document.getElementById('information-email').value;
+                            browser.runtime.sendMessage({
+                                action: 'add_credentials',
+                                args: [label, desc, username, email, _tab.credentials.password, folder_id, _tab.credentials.url, '']
+                            }).then(_verifyResult);
+                        });
+                        this.append(bt[0]);
                     });
 
                 if (hasChildren) {
                     a.text('\u25BE ' + folder_name);
                 }
+                
                 return a;
             };
 
@@ -117,59 +137,84 @@ function _initialize(tab) {
         $('.groups').hide();
         $('ul#list').empty();
 
-        const label = document.getElementById('information-label').value;
-        if (!label || label.length === 0) {
-            showNotification("名称不可为空");
-            return;
+        if (formType !== FORM_TYPE_MODIFY_PASSWORD) {
+            const label = document.getElementById('information-label').value;
+            if (!label || label.length === 0) {
+                showNotification("名称不可为空");
+                return;
+            }
+        }
+        
+        $('.credentials:first .username-new:first strong:first').text(_tab.credentials.username);
+        $('.credentials:first .username-exists:first strong:first').text(_tab.credentials.username);
+
+        if (_tab.credentials.usernameExists) {
+            $('.credentials:first .username-new:first').hide();
+            $('.credentials:first .username-exists:first').show();
+        } else {
+            $('.credentials:first .username-new:first').show();
+            $('.credentials:first .username-exists:first').hide();
         }
 
-        //  Only one entry which could be updated
-        {
-            $('.credentials:first .username-new:first strong:first').text(_tab.credentials.username);
-            $('.credentials:first .username-exists:first strong:first').text(_tab.credentials.username);
+        let bt = null;
+        
+        for (let i = 0; i < _tab.credentials.list.length; i++) {
+            const $a = $('<a>')
+                .attr('href', '#')
+                .attr('class', 'list-group-item')
+                .text(_tab.credentials.list[i].label + ' (' + _tab.credentials.list[i].login + ')')
+                .click(function(ev) {
+                    ev.preventDefault();
 
-            if (_tab.credentials.usernameExists) {
-                $('.credentials:first .username-new:first').hide();
-                $('.credentials:first .username-exists:first').show();
-            } else {
-                $('.credentials:first .username-new:first').show();
-                $('.credentials:first .username-exists:first').hide();
-            }
+                    if (formType === FORM_TYPE_MODIFY_PASSWORD && !exist_credential) {
+                        let _credential = _tab.credentials.list[i];
+                        $('#information-username')[0].value = _credential.login;
+                        $('#information-label')[0].value = _credential.label;
+                        $('#information-email')[0].value = _credential.email ? _credential.email : "";
+                        $('#information-desc')[0].value = _credential.description ? _credential.description : "";
+                    } 
 
-            for (let i = 0; i < _tab.credentials.list.length; i++) {
-                const $a = $('<a>')
-                    .attr('href', '#')
-                    .attr('class', 'list-group-item')
-                    .text(_tab.credentials.list[i].label + ' (' + _tab.credentials.list[i].login + ')')
-                    .data('credential', _tab.credentials.list[i])
-                    .click(function(ev) {
+                    if (bt) {
+                        bt[0].parentNode.removeChild(bt[0]);
+                    }
+                    bt = createOkBt();
+                    bt.click(function (ev) {
                         ev.preventDefault();
-                        const credential = $(this).data('credential');
+                        const credential = _tab.credentials.list[i];
 
-                        // Use the current username if it's empty
-                        if (!_tab.credentials.username) {
-                            _tab.credentials.username = _tab.credentials.list[id].login;
-                        }
-
+                        const username = document.getElementById('information-username').value;
                         const label = document.getElementById('information-label').value;
+                        const desc = document.getElementById('information-desc').value;
                         const email = document.getElementById('information-email').value;
 
                         browser.runtime.sendMessage({
                             action: 'update_credentials',
-                            args: [credential.id, label, credential.desc, _tab.credentials.username, email, _tab.credentials.password, credential.folder_id, _tab.credentials.url, credential.tags]
+                            args: [credential.id, label, desc, username, email, _tab.credentials.password, credential.folder_id, _tab.credentials.url, credential.tags]
                         }).then(_verifyResult);
                     });
+                    this.append(bt[0]);
+                });
 
-                if (_tab.credentials.existingCredential && _tab.credentials.existingCredential.id === _tab.credentials.list[i].id) {
-                    $a.css('font-weight', 'bold');
-                }
-
-                $('ul#list').append($a);
+            if (_tab.credentials.existingCredential && _tab.credentials.existingCredential.id === _tab.credentials.list[i].id) {
+                $a.css('font-weight', 'bold');
             }
 
-            $('.credentials').show();
+            $('ul#list').append($a);
         }
+
+        $('.credentials').show();
     });
+
+    const formType = _tab.credentials.formType;
+    if (formType !== FORM_TYPE_MODIFY_PASSWORD) {
+        $('#popupRememberInfoText').text('发现新用户名和密码，是否保存？');
+        $('#information-label')[0].select();
+    } else if (!exist_credential) {
+        $('#popupRememberInfoText').text('修改密码，请选择一个账户更新');
+        $('#btn-new').attr('disabled', true).removeClass('btn-success');
+        $('#btn-update').click();
+        $('#btn-update').attr('disabled', true).removeClass('btn-success');
+    }
 
     $('#btn-dismiss').click(function(e) {
         e.preventDefault();

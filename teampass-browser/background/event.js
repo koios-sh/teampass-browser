@@ -127,10 +127,10 @@ tpEvent.onRemoveCredentialsFromTabInformation = function(callback, tab) {
     page.clearCredentials(id);
 };
 
-tpEvent.onSetRememberPopup = function(callback, tab, username, password, url, title, usernameExists, credentialsList) {
+tpEvent.onSetRememberPopup = function (callback, tab, formType, usernameValue, passwordValue, url, title, usernameExists, credentialsList) {
     teampass.isConfigured().then((configured) => {
         if (configured) {
-            browserAction.setRememberPopup(tab.id, username, password, url, title, usernameExists, credentialsList).then((result) => {
+            browserAction.setRememberPopup(tab.id, formType, usernameValue, passwordValue, url, title, usernameExists, credentialsList).then((result) => {
                 if (result) {
                     callback();
                 }

@@ -41,7 +41,7 @@ tpAutocomplete.create = function(input, showListInstantly = false, autoSubmit = 
     tpAutocomplete.input = input;
     tpAutocomplete.started = true;
 
-    if (input.getAttribute('tp-password-complete')) {
+    if (input.getAttribute('tp-password-complete') || input.getAttribute('tp-password-generator')) {
         return;
     }
 
@@ -111,6 +111,9 @@ tpAutocomplete.setIconPosition = function (icon) {
         return;
     }
     const field = _f(targetId);
+    if (!field) {
+        return;
+    }
     const rect = field.getBoundingClientRect();
     const offset = Number(icon.getAttribute('offset'));
     const size = Number(icon.getAttribute('size'));

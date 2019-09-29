@@ -100,11 +100,14 @@ function _fs(fieldId) {
 
 var tpForm = {};
 
-tpForm.init = function(form, credentialFields) {
-    if (!form.getAttribute('tpForm-initialized') && (credentialFields.password || credentialFields.username)) {
+tpForm.init = function (form, formType, userNameFields, passwordFields) {
+    if (!form.getAttribute('tpForm-initialized') && formType !== 0) {
         form.setAttribute('tpForm-initialized', true);
-        tpForm.setInputFields(form, credentialFields);
+        form.tpUsername = userNameFields[0];
+        form.tpPassword = passwordFields;
+        // tpForm.setInputFields(form, userNameFields, passwordFields);
         form.addEventListener('submit', tpForm.onSubmit);
+        form.formType = formType;
 
         const submitButton = tp.getSubmitButton(form);
         if (submitButton !== undefined) {
@@ -127,30 +130,65 @@ tpForm.destroy = function(form, credentialFields) {
     }
 };
 
-tpForm.setInputFields = function(form, credentialFields) {
-    form.setAttribute('tpUsername', credentialFields.username);
-    form.setAttribute('tpPassword', credentialFields.password);
-};
+// tpForm.setInputFields = function (form, userNameFields, passwordFields) {
+//     form.setAttribute('tpUsername', userNameFields[0]);
+//     form.setAttribute('tpPassword', passwordFields);
+// };
 
 tpForm.onSubmit = function() {
     const form = this.nodeName === 'FORM' ? this : (this.form ? this.form : tpForm.form);
-    const usernameId = form.getAttribute('tpUsername');
-    const passwordId = form.getAttribute('tpPassword');
+    const usernameId = form.tpUsername;
+    const passwordIds = form.tpPassword;
+
+    let passwords = [];
+    passwordIds.forEach((item) => {
+        const passwordField = _f(item);
+        if (passwordField) {
+            passwords.push(passwordField.value);
+        }
+    });
 
     let usernameValue = '';
     let passwordValue = '';
+    const formType = form.formType;
+    if (formType === FORM_TYPE_LOGIN) {
+        // login
+        if (passwords.length !== 1) {
+            // WHAT HAPPENED?
+        } else {
+            passwordValue = passwords[0];
+        }
+    } else if (formType === FORM_TYPE_SET_NEW_PASSWORD) {
+        // set new
+        // need to check if two are same
+        if (passwords.length !== 2) {
+            // WHAT HAPPENED?
+        } else if (passwords[0] !== passwords[1]){
+            // password not same, can we save it ??
+        } else {
+            // save the password
+            passwordValue = passwords[0];
+        }
+    } else if (formType === FORM_TYPE_MODIFY_PASSWORD) {
+        // modify
+        // get last two and check are same
+        if (passwords.length !== 3) {
+            // WHAT HAPPENED?
+        } else if (passwords[1] !== passwords[2]) {
+            // password not same, can we save it ??
+        } else {
+            // save the password
+            passwordValue = passwords[1];
+        }
+    }
 
     const usernameField = _f(usernameId);
-    const passwordField = _f(passwordId);
 
     if (usernameField) {
         usernameValue = usernameField.value || usernameField.placeholder;
     }
-    if (passwordField) {
-        passwordValue = passwordField.value;
-    }
 
-    tp.rememberCredentials(usernameValue, passwordValue);
+    tp.rememberCredentials(formType, usernameValue, passwordValue);
 };
 
 
@@ -310,8 +348,15 @@ tpFields.getAllCombinations = function(inputs) {
     for (const i of inputs) {
         if (i) {
             if (i.getAttribute('type') && i.getAttribute('type').toLowerCase() === 'password') {
-                const uId = (!uField || uField.length < 1) ? null : uField.getAttribute('data-tp-id');
-
+                let uId = (!uField || uField.length < 1) ? null : uField.getAttribute('data-tp-id');
+                const uRect = uField && uField.getBoundingClientRect() || { "x": 0, "y": 0, "width": 0, "height": 0, "top": 0, "right": 0, "bottom": 0, "left": 0 };
+                const pRect = i.getBoundingClientRect();
+                if (Math.abs(uRect.y - pRect.y) >= 100) {
+                    if ((Math.abs(uRect.x - pRect.x) >= 40) || (uRect.width !== pRect.width)) {
+                        uId = null;
+                    }
+                }
+                
                 const combination = {
                     username: uId,
                     password: i.getAttribute('data-tp-id')
@@ -322,7 +367,16 @@ tpFields.getAllCombinations = function(inputs) {
                 uField = null;
             } else {
                 // Username field
-                uField = i;
+                if (uField) {
+                    // check i is a captcha field?
+                    const uRect = uField.getBoundingClientRect();
+                    const iRect = i.getBoundingClientRect();
+                    if (iRect.width >= uRect) {
+                        uField = i;
+                    }
+                } else {
+                    uField = i;
+                }
             }
         }
     }
@@ -521,6 +575,30 @@ tpFields.getPasswordField = function(usernameId, checkDisabled) {
 };
 
 tpFields.prepareCombinations = function(combinations) {
+    let userNameFields = [];
+    let passwordFields = [];
+    for (const c of combinations) {
+        if (c.username && _f(c.username)) {
+            userNameFields.push(c.username);
+        }
+        if (c.password && _f(c.password)) {
+            passwordFields.push(c.password);
+        }
+    }
+    let formType = 0; // no need form
+    if (userNameFields.length === 0 && passwordFields.length === 3) {
+        // modify password
+        formType = FORM_TYPE_MODIFY_PASSWORD;
+    } else if (userNameFields.length > 0 && passwordFields.length === 2) {
+        // set new password
+        formType = FORM_TYPE_SET_NEW_PASSWORD;
+    } else if (userNameFields.length > 0 && passwordFields.length === 1) {
+        // login
+        formType = FORM_TYPE_LOGIN;
+    }
+    if (formType === 0) {
+        return;
+    }
     for (const c of combinations) {
         const pwField = _f(c.password);
         // Needed for auto-complete: don't overwrite manually filled-in password field
@@ -537,7 +615,7 @@ tpFields.prepareCombinations = function(combinations) {
         if (field) {
             const form = field.closest('form');
             if (form && form.length > 0) {
-                tpForm.init(form, c);
+                tpForm.init(form, formType, userNameFields, passwordFields);
             }
         }
     }
@@ -1009,28 +1087,61 @@ tp.preparePageForMultipleCredentials = function(credentials) {
 };
 
 tp.prepareUserNameFieldIcon = function() {
-    const _oldDetectedFields = _detectedFields;
+    // const _oldDetectedFields = _detectedFields;
+    let passwordFieldCount = 0;
+    let  firstUserNameField = null, firstPasswordField;
     for (const i of tpFields.combinations) {
-        // Both username and password fields are visible
-        if (_detectedFields >= 4) {
-            if (_f(i.username) && _f(i.password)) {
-                tpAutocomplete.create(_f(i.password), false, tp.settings.autoSubmit);
-            } 
-            _detectedFields = 3;
-        } else if (_detectedFields >= 2) {
-            if (_f(i.username)) {
-                tpAutocomplete.create(_f(i.username), false, tp.settings.autoSubmit);
+        if (i.username && !firstUserNameField && _f(i.username)) {
+            firstUserNameField = _f(i.username);
+        }
+        const pField = i.password ? _f(i.password) : null;
+        if (pField) {
+            if (!firstPasswordField) {
+                firstPasswordField = pField;
             }
-        } else if (_detectedFields === 1) {
-            if (_f(i.username)) {
-                tpAutocomplete.create(_f(i.username), false, tp.settings.autoSubmit);
-            }
-            if (_f(i.password)) {
-                tpAutocomplete.create(_f(i.password), false, tp.settings.autoSubmit);
-            }
+            passwordFieldCount++;
         }
     }
-    _detectedFields = _oldDetectedFields;
+    if (!firstUserNameField) {
+        // has no username field, // make first passwordField show icon
+        if (passwordFieldCount >= 3) {
+            tpAutocomplete.create(firstPasswordField, false, tp.settings.autoSubmit);
+        }
+    } else {
+        // set icon to first username field
+        tpAutocomplete.create(firstUserNameField, false, tp.settings.autoSubmit);
+    }
+    
+    
+    // for (const i of tpFields.combinations) {
+    //     // Both username and password fields are visible
+    //     if (_detectedFields >= 4) {
+    //         // 修改密码，还检测到别的输入框
+    //         if (_f(i.username) && _f(i.password)) {
+    //             tpAutocomplete.create(_f(i.password), false, tp.settings.autoSubmit);
+    //         } 
+    //         _detectedFields = 3;
+    //     } else if (_detectedFields >= 3) {
+    //         // 如果username为空，就是修改密码
+    //         if (!_f(i.username)) {
+    //             tpAutocomplete.create(_f(i.password), false, tp.settings.autoSubmit);
+    //         }
+    //         _detectedFields = 2;
+    //     } 
+    //     else if (_detectedFields >= 2) {
+    //         if (_f(i.username)) {
+    //             tpAutocomplete.create(_f(i.username), false, tp.settings.autoSubmit);
+    //         }
+    //     } else if (_detectedFields === 1) {
+    //         if (_f(i.username)) {
+    //             tpAutocomplete.create(_f(i.username), false, tp.settings.autoSubmit);
+    //         }
+    //         if (_f(i.password)) {
+    //             tpAutocomplete.create(_f(i.password), false, tp.settings.autoSubmit);
+    //         }
+    //     }
+    // }
+    // _detectedFields = _oldDetectedFields;
 };
 
 tp.getFormActionUrl = function(combination) {
@@ -1081,20 +1192,29 @@ tp.getSubmitButton = function(form) {
             }
         }
     }
+    let elements = [form, document];
+    const formBottom = form.getBoundingClientRect().bottom;
+    let submitButton = undefined;
+    elements.forEach(element => {
+        // Try to find another button in form. Select the first one.
+        let buttons = Array.from(element.querySelectorAll('button[type=\'button\'], a[onclick], input[type=\'button\'], button:not([type])'));
+        let visibleButtons = buttons.filter((item) => { 
+            return tpFields.isVisible(item) && item.getBoundingClientRect().top >= formBottom;
+        });
+        if (visibleButtons.length === 1) {
+            submitButton = visibleButtons[0];
+        } else if (visibleButtons.length > 1) {
+            const rect0 = visibleButtons[0].getBoundingClientRect();
+            const rect1 = visibleButtons[1].getBoundingClientRect();
+            if (rect0.top === rect1.top) {
+                submitButton = visibleButtons[1];
+            } else {
+                submitButton = visibleButtons[0];
+            }
+        }
+    });
 
-    // Try to find another button in form. Select the first one.
-    let buttons = Array.from(form.querySelectorAll('button[type=\'button\'], a[onclick], input[type=\'button\'], button:not([type])'));
-    if (buttons.length > 0) {
-        return buttons[0];
-    }
-
-    // Try to find another button in document. Select the first one.
-    buttons = Array.from(document.querySelectorAll('button[type=\'button\'], input[type=\'button\'], button:not([type])'));
-    if (buttons.length > 0) {
-        return buttons[0];
-    }
-
-    return undefined;
+    return submitButton;
 };
 
 tp.fillInCredentials = function(combination, onlyPassword, suppressWarnings) {
@@ -1426,6 +1546,7 @@ tp.fillIn = function(combination, onlyPassword, suppressWarnings) {
     }
 };
 
+// TBD
 tp.contextMenuRememberCredentials = function() {
     const el = document.activeElement;
     if (el.tagName.toLowerCase() !== 'input') {
@@ -1463,10 +1584,10 @@ tp.contextMenuRememberCredentials = function() {
     }
 };
 
-tp.rememberCredentials = function(usernameValue, passwordValue) {
+tp.rememberCredentials = function (formType, usernameValue, passwordValue) {
     // No password given or field cleaned by a site-running script
     // --> no password to save
-    if (passwordValue === '') {
+    if (!passwordValue) {
         return false;
     }
 
@@ -1511,25 +1632,7 @@ tp.rememberCredentials = function(usernameValue, passwordValue) {
 
         browser.runtime.sendMessage({
             action: 'set_remember_credentials',
-            args: [usernameValue, passwordValue, url, document.title, existingCredential, credentialsList ]
-        }).then(() => {
-            // var iframe = document.createElement('iframe');
-            // iframe.id = "tp-popup-remember";
-            // // Must be declared at web_accessible_resources in manifest.json
-            // iframe.src = chrome.runtime.getURL("content/remember.html");
-
-            // // Some styles for a fancy sidebar
-            // iframe.style.cssText = 'position: fixed;user-select: none;top: 12px;right: 12px;bottom: initial;left: initial;width: 306px;height: 567px;border: 0px;z-index: 2147483646;clip: auto;display: block !important;';
-            // document.body.appendChild(iframe);
-
-            // window.addEventListener('message', function (e) {
-            //     if (e.data && e.data.type === "removePopupRememberIframe") {
-            //         var popupRememberIframe = window.parent.document.getElementById('tp-popup-remember');
-            //         if (popupRememberIframe) {
-            //             popupRememberIframe.parentNode.removeChild(popupRememberIframe);
-            //         }
-            //     }
-            // });
+            args: [formType, usernameValue, passwordValue, url, document.title, existingCredential, credentialsList ]
         });
 
         return true;

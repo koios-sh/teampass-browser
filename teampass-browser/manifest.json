@@ -117,16 +117,7 @@
         "storage",
         "tabs",
         "webRequest",
-        "webRequestBlocking",
-        "https://*/*",
-        "http://*/*",
-        "https://api.github.com/"
+        "webRequestBlocking"
     ],
-    "applications": {
-       "gecko": {
-           "id": "teampass-browser@teampass.net",
-           "strict_min_version": "52.0"
-       }
-   },
    "default_locale": "en"
 }

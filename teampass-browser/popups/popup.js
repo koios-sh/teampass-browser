@@ -85,14 +85,14 @@ $(function() {
         });
     });
 
-    browser.storage.local.get({ 'settings': {} }).then(item => {
+    browser.storage.local.get({ 'whoami': {} }).then(item => {
         console.log(item);
-        if (item['settings']['configured']) {
+        if (!item['whoami']['success']) {
             browser.runtime.sendMessage({
                 action: 'get_user_info'
             }).then(statusResponse);
         } else {
-            statusResponse({ 'message': '未配置服务器地址' });
+            statusResponse(item['whoami']);
         }
     });
 

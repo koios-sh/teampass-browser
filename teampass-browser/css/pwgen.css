@@ -81,6 +81,7 @@
 
 .tp-pwgen-input {
     width: 100%;
+    color: black;
     font-size: 12px !important;
     font-weight: normal !important;
 }

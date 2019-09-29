@@ -360,7 +360,7 @@
         "description": "URL. Might not need any translation."
     },
     "popupUsername": {
-        "message": "用户：",
+        "message": "账号：",
         "description": "A username field name shown on credential update."
     },
     "popupButtonNew": {

@@ -4,6 +4,10 @@ const IGNORE_NOTHING = 'ignoreNothing';
 const IGNORE_NORMAL = 'ignoreNormal';
 const IGNORE_FULL = 'ignoreFull';
 
+const FORM_TYPE_LOGIN = 'login';
+const FORM_TYPE_SET_NEW_PASSWORD = 'set_password';
+const FORM_TYPE_MODIFY_PASSWORD = 'modify_password';
+
 const schemeSegment = '(\\*|http|https|ws|wss|file|ftp)';
 const hostSegment = '(\\*|(?:\\*\\.)?(?:[^/*]+))?';
 const pathSegment = '(.*)';

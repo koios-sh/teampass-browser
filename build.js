@@ -17,7 +17,7 @@ function adjustManifest(manifest) {
     const manifestFile = fs.readFileSync(DEFAULT, 'utf8');
     const data = JSON.parse(manifestFile);
     const browser = manifest.substring(manifest.indexOf('_') + 1, manifest.indexOf('.'));
-
+    var extension = 'zip';
     if (manifest.includes('firefox')) {
         for (const elem in data['icons']) {
             data['icons'][elem] = 'icons/teampass.svg';
@@ -25,12 +25,13 @@ function adjustManifest(manifest) {
         for (const elem in data['browser_action']['default_icon']) {
             data['browser_action']['default_icon'][elem] = 'icons/teampass.svg';
         }
+        extension = 'xpi';
     } else if (manifest.includes('chromium')) {
         delete data['applications'];
     }
 
     fs.writeFileSync(manifest, JSON.stringify(data, null, 4));
-    return `teampass-browser_${data['version']}_${browser}.zip`;
+    return `teampass-browser_${browser}.${extension}`;
 }
 
 async function updateTranslations() {

@@ -201,7 +201,7 @@ browserAction.removeRememberPopup = function(callback, tab, removeImmediately) {
     }
 };
 
-browserAction.setRememberPopup = function (tabId, username, password, url, title, existingCredential, credentialsList) {
+browserAction.setRememberPopup = function (tabId, formType, username, password, url, title, existingCredential, credentialsList) {
     return new Promise((resolve, reject) => {
         browser.storage.local.get({ 'settings': {} }).then(function (item) {
             const settings = item.settings;
@@ -244,6 +244,7 @@ browserAction.setRememberPopup = function (tabId, username, password, url, title
             browserAction.stackPush(stackData, id);
 
             page.tabs[id].credentials = {
+                formType: formType,
                 username: username,
                 password: password,
                 url: url,
