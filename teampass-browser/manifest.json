@@ -25,6 +25,36 @@
         "default_title": "TeamPass-Browser",
         "default_popup": "popups/popup.html"
     },
+    "commands": {
+        "fill_username_password": {
+            "description": "__MSG_contextMenuFillUsernameAndPassword__",
+            "suggested_key": {
+                "default": "Alt+Shift+U",
+                "mac": "MacCtrl+Shift+U"
+            }
+        },
+        "fill_password": {
+            "description": "__MSG_contextMenuFillPassword__",
+            "suggested_key": {
+                "default": "Alt+Shift+I",
+                "mac": "MacCtrl+Shift+I"
+            }
+        },
+        "fill_totp": {
+            "description": "__MSG_contextMenuFillTOTP__",
+            "suggested_key": {
+                "default": "Alt+Shift+T",
+                "mac": "MacCtrl+Shift+T"
+            }
+        },
+        "show_password_generator": {
+            "description": "__MSG_contextMenuShowPasswordGenerator__",
+            "suggested_key": {
+                "default": "Alt+Shift+G",
+                "mac": "MacCtrl+Shift+G"
+            }
+        }
+    },
     "options_ui": {
         "page": "options/options.html",
         "open_in_tab": true
