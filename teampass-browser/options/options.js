@@ -267,7 +267,8 @@ options.initServerSettings = function() {
 
         options.saveSettings(cb => {
             browser.runtime.sendMessage({
-                action: 'get_user_info'
+                action: 'get_user_info',
+                args: [true]
             }).then(statusResponse => {
                 if (!statusResponse.success) {
                     alert(statusResponse.message);

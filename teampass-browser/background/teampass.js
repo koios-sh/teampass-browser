@@ -115,9 +115,9 @@ teampass.sendRestHttpRequest = async function(action, payload) {
     });
 };
 
-teampass.queryMyInfo = async function(callback, tab) {
+teampass.queryMyInfo = async function(callback, tab, reload=false) {
     teampass.isConfigured().then((configured) => {
-        if (configured) {
+        if (configured && !reload) {
             browser.storage.local.get({ 'whoami': {} }).then((item) => {
                 callback(item['whoami']);
             });
